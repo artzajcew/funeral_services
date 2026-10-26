@@ -29,12 +29,7 @@ CREATE TABLE users (
 
     password VARCHAR(255) NOT NULL,
 
-    full_name VARCHAR(150) NOT NULL,
-
-    role VARCHAR(20) NOT NULL,
-
-    CONSTRAINT chk_users_role
-        CHECK (role IN ('CLIENT', 'ADMIN'))
+    full_name VARCHAR(150) NOT NULL
 );
 
 

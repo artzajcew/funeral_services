@@ -24,7 +24,8 @@ public class GuestMenu {
             System.out.println("2. Регистрация");
             System.out.println("3. Показать доступные услуги");
             System.out.println("4. Поиск услуги");
-            System.out.println("5. Выход");
+            System.out.println("5. Управление заказами и статистика");
+            System.out.println("6. Выход");
             System.out.print("Выберите действие: ");
 
             int choice = readInt();
@@ -43,6 +44,9 @@ public class GuestMenu {
                     searchService();
                     break;
                 case 5:
+                    new AdminMenu().showMenu();
+                    break;
+                case 6:
                     System.out.println("Выход из программы...");
                     return;
                 default:
@@ -60,11 +64,7 @@ public class GuestMenu {
         User user = userDAO.login(login, password);
         if (user != null) {
             System.out.println("Успешный вход! Добро пожаловать, " + user.getFullName());
-            if ("ADMIN".equals(user.getRole())) {
-                new AdminMenu().showMenu();
-            } else {
-                new ClientMenu(user).showMenu();
-            }
+            new ClientMenu(user).showMenu();
         } else {
             System.out.println("Неверный логин или пароль.");
         }

@@ -23,8 +23,7 @@ public class UserDAO {
                     rs.getInt("id"),
                     rs.getString("login"),
                     rs.getString("password"),
-                    rs.getString("full_name"),
-                    rs.getString("role")
+                    rs.getString("full_name")
                 );
             }
         } catch (SQLException e) {
@@ -35,7 +34,7 @@ public class UserDAO {
 
     public int register(String login, String password, String fullName) {
         String hashedPassword = PasswordUtils.hashPassword(password);
-        String sql = "INSERT INTO users (login, password, full_name, role) VALUES (?, ?, ?, 'CLIENT') RETURNING id";
+        String sql = "INSERT INTO users (login, password, full_name) VALUES (?, ?, ?) RETURNING id";
         
         try (Connection conn = DatabaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -53,4 +52,16 @@ public class UserDAO {
         }
         return -1;
     }
+    public long countUsers() {
+        String sql = "SELECT COUNT(*) FROM users";
+        try (Connection conn = DatabaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            return rs.next() ? rs.getLong(1) : 0;
+        } catch (SQLException e) {
+            System.out.println("Ошибка при подсчёте пользователей: " + e.getMessage());
+            return 0;
+        }
+    }
+
 }

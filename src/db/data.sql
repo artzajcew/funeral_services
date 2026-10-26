@@ -10,14 +10,14 @@
 -- ============================================================
 
 -- Пароли хранятся как SHA-256 (см. utils.PasswordUtils): admin123 и 123456
-INSERT INTO users (id, login, password, full_name, role)
+INSERT INTO users (id, login, password, full_name)
 VALUES
-    (1, 'admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 'Иванов Иван Иванович', 'ADMIN'),
+    (1, 'admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 'Иванов Иван Иванович'),
 
-    (2, 'petrov', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Петров Петр Петрович', 'CLIENT'),
-    (3, 'sidorova', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Сидорова Анна Сергеевна', 'CLIENT'),
-    (4, 'smirnov', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Смирнов Алексей Викторович', 'CLIENT'),
-    (5, 'volkova', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Волкова Елена Андреевна', 'CLIENT');
+    (2, 'petrov', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Петров Петр Петрович'),
+    (3, 'sidorova', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Сидорова Анна Сергеевна'),
+    (4, 'smirnov', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Смирнов Алексей Викторович'),
+    (5, 'volkova', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Волкова Елена Андреевна');
 
 
 -- ============================================================

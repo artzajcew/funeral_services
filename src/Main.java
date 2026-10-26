@@ -1,4 +1,4 @@
-import ui.GuestMenu;
+import ui.AdminMenu;
 import utils.ConsoleHelper;
 
 public class Main {
@@ -8,8 +8,6 @@ public class Main {
         System.out.println("  Система автоматизации бюро ритуальных услуг  ");
         System.out.println("==================================================");
         
-        // Запуск главного меню (для гостя)
-        GuestMenu guestMenu = new GuestMenu();
-        guestMenu.showMenu();
+        new AdminMenu().showMenu();
     }
 }
