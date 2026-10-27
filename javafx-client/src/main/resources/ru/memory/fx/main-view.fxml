@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="sceneRoot" prefHeight="900.0" prefWidth="1440.0" styleClass="app-root"
+           xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="ru.memory.fx.MainController">
+    <children>
+        <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+            <left>
+                <VBox prefWidth="244.0" styleClass="sidebar">
+                    <padding><Insets bottom="24.0" left="22.0" right="22.0" top="24.0" /></padding>
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="brand-lockup">
+                            <children>
+                                <StackPane minHeight="44.0" minWidth="44.0" prefHeight="44.0" prefWidth="44.0" styleClass="brand-mark">
+                                    <children><Label text="П" styleClass="brand-letter" /></children>
+                                </StackPane>
+                                <VBox spacing="2.0">
+                                    <children>
+                                        <Label text="Память" styleClass="brand-name" />
+                                        <Label text="служба заботы" styleClass="brand-caption" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <Label text="Управление" styleClass="nav-caption">
+                            <VBox.margin><Insets top="38.0" bottom="10.0" /></VBox.margin>
+                        </Label>
+                        <Button fx:id="overviewNavButton" maxWidth="1.7976931348623157E308" onAction="#showOverview" text="Обзор" styleClass="nav-button-active" />
+                        <Button fx:id="ordersNavButton" maxWidth="1.7976931348623157E308" onAction="#showOrdersPage" text="Заказы" styleClass="nav-button" />
+                        <Button fx:id="clientsNavButton" maxWidth="1.7976931348623157E308" onAction="#showClients" text="Клиенты" styleClass="nav-button" />
+                        <Button fx:id="servicesNavButton" maxWidth="1.7976931348623157E308" onAction="#showServices" text="Услуги" styleClass="nav-button" />
+                        <Button fx:id="analyticsNavButton" maxWidth="1.7976931348623157E308" onAction="#showStatistics" text="Аналитика" styleClass="nav-button" />
+
+                        <Region VBox.vgrow="ALWAYS" />
+
+                        <VBox spacing="8.0" styleClass="sidebar-note">
+                            <children>
+                                <Label text="Источник данных" wrapText="true" styleClass="sidebar-note-title" />
+                                <Label fx:id="connectionStatusLabel" text="Подключение к базе данных" wrapText="true" styleClass="connection-status" />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </left>
+
+            <center>
+                <ScrollPane fx:id="contentScroll" fitToWidth="true" hbarPolicy="NEVER" styleClass="content-scroll">
+                    <content>
+                        <StackPane>
+                            <children>
+                                <VBox fx:id="overviewRoot" spacing="20.0" styleClass="content-root">
+                                    <padding><Insets bottom="24.0" left="28.0" right="28.0" top="26.0" /></padding>
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="page-header">
+                                            <children>
+                                                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label text="Обзор" styleClass="page-title" />
+                                                        <Label text="Главные показатели и последние изменения в системе" styleClass="page-subtitle" />
+                                                    </children>
+                                                </VBox>
+                                                <Button onAction="#refreshOrders" text="Обновить данные" styleClass="button-secondary" />
+                                                <Button onAction="#openNewOrder" text="Создать заказ" styleClass="button-primary" />
+                                            </children>
+                                        </HBox>
+
+                                        <GridPane hgap="10.0" styleClass="metrics-grid">
+                                            <columnConstraints>
+                                                <ColumnConstraints percentWidth="22.0" />
+                                                <ColumnConstraints percentWidth="22.0" />
+                                                <ColumnConstraints percentWidth="22.0" />
+                                                <ColumnConstraints percentWidth="34.0" />
+                                            </columnConstraints>
+                                            <children>
+                                                <VBox spacing="7.0" styleClass="metric-cell" GridPane.columnIndex="0">
+                                                    <children><Label text="Заказы" styleClass="metric-label" /><Label fx:id="overviewOrdersLabel" text="0" styleClass="metric-value" /></children>
+                                                </VBox>
+                                                <VBox spacing="7.0" styleClass="metric-cell" GridPane.columnIndex="1">
+                                                    <children><Label text="Клиенты" styleClass="metric-label" /><Label fx:id="overviewClientsLabel" text="0" styleClass="metric-value" /></children>
+                                                </VBox>
+                                                <VBox spacing="7.0" styleClass="metric-cell" GridPane.columnIndex="2">
+                                                    <children><Label text="Услуги" styleClass="metric-label" /><Label fx:id="overviewServicesLabel" text="0" styleClass="metric-value" /></children>
+                                                </VBox>
+                                                <VBox spacing="7.0" styleClass="metric-cell-last" GridPane.columnIndex="3">
+                                                    <children><Label text="Активные заказы" styleClass="metric-label" /><Label fx:id="overviewActiveLabel" text="0" styleClass="metric-value-accent" /></children>
+                                                </VBox>
+                                            </children>
+                                        </GridPane>
+
+                                        <GridPane hgap="18.0" vgap="18.0" VBox.vgrow="ALWAYS">
+                                            <columnConstraints>
+                                                <ColumnConstraints percentWidth="68.0" />
+                                                <ColumnConstraints percentWidth="32.0" />
+                                            </columnConstraints>
+                                            <children>
+                                                <VBox spacing="0.0" styleClass="workspace" GridPane.columnIndex="0">
+                                                    <children>
+                                                        <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="table-heading">
+                                                            <children>
+                                                                <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                                                                    <children><Label text="Последние заказы" styleClass="section-title" /><Label text="Пять последних записей по дате создания" styleClass="empty-copy" /></children>
+                                                                </VBox>
+                                                                <Button onAction="#showOrdersPage" text="Открыть список" styleClass="button-quiet" />
+                                                            </children>
+                                                        </HBox>
+                                                        <TableView fx:id="overviewOrdersTable" fixedCellSize="58.0" VBox.vgrow="ALWAYS">
+                                                            <placeholder><Label text="Заказов пока нет" styleClass="empty-copy" /></placeholder>
+                                                            <columns>
+                                                                <TableColumn fx:id="overviewOrderIdColumn" minWidth="72.0" prefWidth="78.0" text="Номер" />
+                                                                <TableColumn fx:id="overviewOrderClientColumn" minWidth="180.0" prefWidth="220.0" text="Клиент" />
+                                                                <TableColumn fx:id="overviewOrderStatusColumn" minWidth="130.0" prefWidth="140.0" text="Статус" />
+                                                                <TableColumn fx:id="overviewOrderAmountColumn" minWidth="120.0" prefWidth="140.0" text="Сумма" />
+                                                            </columns>
+                                                        </TableView>
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="18.0" styleClass="summary-panel" GridPane.columnIndex="1">
+                                                    <children>
+                                                        <VBox spacing="4.0">
+                                                            <children><Label text="Состояние работы" styleClass="section-title" /><Label text="Краткая сводка по текущей загрузке" wrapText="true" styleClass="empty-copy" /></children>
+                                                        </VBox>
+                                                        <Separator />
+                                                        <VBox spacing="6.0" styleClass="summary-row">
+                                                            <children><Label text="Новые" styleClass="metric-label" /><Label fx:id="overviewNewLabel" text="0" styleClass="summary-value" /></children>
+                                                        </VBox>
+                                                        <VBox spacing="6.0" styleClass="summary-row">
+                                                            <children><Label text="В обработке" styleClass="metric-label" /><Label fx:id="overviewProgressLabel" text="0" styleClass="summary-value" /></children>
+                                                        </VBox>
+                                                        <VBox spacing="6.0" styleClass="summary-row">
+                                                            <children><Label text="Завершено" styleClass="metric-label" /><Label fx:id="overviewCompletedLabel" text="0" styleClass="summary-value" /></children>
+                                                        </VBox>
+                                                        <Region VBox.vgrow="ALWAYS" />
+                                                        <Button maxWidth="1.7976931348623157E308" onAction="#showStatistics" text="Посмотреть аналитику" styleClass="button-secondary" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </GridPane>
+                                    </children>
+                                </VBox>
+
+                                <VBox fx:id="contentRoot" spacing="20.0" styleClass="content-root" visible="false" managed="false">
+                                    <padding><Insets bottom="24.0" left="28.0" right="28.0" top="26.0" /></padding>
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="page-header">
+                                            <children>
+                                                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label text="Заказы" styleClass="page-title" />
+                                                        <Label text="Создание, редактирование и контроль заказов" styleClass="page-subtitle" />
+                                                    </children>
+                                                </VBox>
+                                                <Button fx:id="exportButton" onAction="#exportOrders" text="Экспорт CSV" styleClass="button-secondary" />
+                                                <Button fx:id="createButton" onAction="#openNewOrder" text="Создать заказ" styleClass="button-primary" />
+                                            </children>
+                                        </HBox>
+
+                                        <GridPane hgap="10.0" styleClass="metrics-grid">
+                                            <columnConstraints>
+                                                <ColumnConstraints percentWidth="23.0" />
+                                                <ColumnConstraints percentWidth="23.0" />
+                                                <ColumnConstraints percentWidth="23.0" />
+                                                <ColumnConstraints percentWidth="31.0" />
+                                            </columnConstraints>
+                                            <children>
+                                                <VBox spacing="7.0" styleClass="metric-cell" GridPane.columnIndex="0">
+                                                    <children>
+                                                        <Label text="Всего заказов" styleClass="metric-label" />
+                                                        <Label fx:id="totalOrdersLabel" text="0" styleClass="metric-value" />
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="7.0" styleClass="metric-cell" GridPane.columnIndex="1">
+                                                    <children>
+                                                        <Label text="В работе" styleClass="metric-label" />
+                                                        <Label fx:id="activeOrdersLabel" text="0" styleClass="metric-value-accent" />
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="7.0" styleClass="metric-cell" GridPane.columnIndex="2">
+                                                    <children>
+                                                        <Label text="Завершено" styleClass="metric-label" />
+                                                        <Label fx:id="completedOrdersLabel" text="0" styleClass="metric-value" />
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="7.0" styleClass="metric-cell-last" GridPane.columnIndex="3">
+                                                    <children>
+                                                        <Label text="Сумма активных заказов" styleClass="metric-label" />
+                                                        <Label fx:id="activeSumLabel" text="0 ₽" styleClass="metric-value-wide" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </GridPane>
+
+                                        <VBox fx:id="ordersWorkspace" spacing="0.0" styleClass="workspace" VBox.vgrow="ALWAYS">
+                                            <children>
+                                                <VBox spacing="10.0" styleClass="toolbar">
+                                                    <children>
+                                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                            <children>
+                                                                <TextField fx:id="searchField" onAction="#applyFilters" promptText="Номер, клиент, телефон или услуга" styleClass="search-field" HBox.hgrow="ALWAYS" />
+                                                                <ComboBox fx:id="statusFilter" prefWidth="174.0" promptText="Статус" />
+                                                                <Button onAction="#clearFilters" text="Сбросить" styleClass="button-quiet" />
+                                                                <Button fx:id="refreshButton" onAction="#refreshOrders" text="Обновить" styleClass="button-quiet" />
+                                                            </children>
+                                                        </HBox>
+                                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                            <children>
+                                                                <Label text="Дата создания" styleClass="filter-label" />
+                                                                <DatePicker fx:id="orderFromDate" prefWidth="156.0" promptText="С" />
+                                                                <Label text="по" styleClass="filter-separator" />
+                                                                <DatePicker fx:id="orderToDate" prefWidth="156.0" promptText="По" />
+                                                                <Label fx:id="orderFilterError" text="Дата начала должна быть не позже даты окончания." visible="false" managed="false" styleClass="filter-error" HBox.hgrow="ALWAYS" />
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </VBox>
+
+                                                <SplitPane fx:id="ordersSplit" dividerPositions="0.69" styleClass="orders-split" VBox.vgrow="ALWAYS">
+                                                    <items>
+                                                        <VBox spacing="0.0" styleClass="table-panel">
+                                                            <children>
+                                                                <HBox alignment="CENTER_LEFT" spacing="18.0" styleClass="table-heading">
+                                                                    <children>
+                                                                        <Label text="Все заказы" styleClass="section-title" />
+                                                                        <Region HBox.hgrow="ALWAYS" />
+                                                                        <Label fx:id="resultCountLabel" text="Показано: 0" styleClass="result-count" />
+                                                                    </children>
+                                                                </HBox>
+                                                                <TableView fx:id="ordersTable" fixedCellSize="58.0" VBox.vgrow="ALWAYS">
+                                                                    <placeholder>
+                                                                        <StackPane styleClass="table-placeholder">
+                                                                            <children>
+                                                                                <VBox fx:id="tableSkeleton" alignment="CENTER" maxWidth="360.0" spacing="12.0" styleClass="loading-skeleton">
+                                                                                    <children>
+                                                                                        <Label text="Загружаем заказы" styleClass="empty-title" />
+                                                                                        <Region maxWidth="360.0" minHeight="12.0" styleClass="skeleton-line" />
+                                                                                        <Region maxWidth="320.0" minHeight="12.0" styleClass="skeleton-line" />
+                                                                                        <Region maxWidth="344.0" minHeight="12.0" styleClass="skeleton-line" />
+                                                                                    </children>
+                                                                                </VBox>
+                                                                                <VBox fx:id="emptyTableState" alignment="CENTER" maxWidth="390.0" spacing="10.0" styleClass="empty-table" visible="false" managed="false">
+                                                                                    <children>
+                                                                                        <Label fx:id="emptyTableTitle" text="Заказов пока нет" styleClass="empty-title" />
+                                                                                        <Label fx:id="emptyTableCopy" maxWidth="360.0" text="Создайте первый заказ, чтобы начать работу." textAlignment="CENTER" wrapText="true" styleClass="empty-copy" />
+                                                                                        <Button fx:id="emptyTableActionButton" onAction="#handleEmptyAction" text="Создать заказ" styleClass="button-secondary">
+                                                                                            <VBox.margin><Insets top="6.0" /></VBox.margin>
+                                                                                        </Button>
+                                                                                    </children>
+                                                                                </VBox>
+                                                                            </children>
+                                                                        </StackPane>
+                                                                    </placeholder>
+                                                                    <columns>
+                                                                        <TableColumn fx:id="idColumn" minWidth="66.0" prefWidth="72.0" text="Номер" />
+                                                                        <TableColumn fx:id="clientColumn" minWidth="150.0" prefWidth="180.0" text="Клиент" />
+                                                                        <TableColumn fx:id="dateColumn" minWidth="132.0" prefWidth="155.0" text="Создан" />
+                                                                        <TableColumn fx:id="statusColumn" minWidth="116.0" prefWidth="132.0" text="Статус" />
+                                                                        <TableColumn fx:id="serviceColumn" minWidth="170.0" prefWidth="220.0" text="Услуги" />
+                                                                        <TableColumn fx:id="amountColumn" minWidth="102.0" prefWidth="120.0" text="Сумма" />
+                                                                    </columns>
+                                                                </TableView>
+                                                            </children>
+                                                        </VBox>
+
+                                                        <StackPane styleClass="detail-stack">
+                                                            <children>
+                                                                <VBox fx:id="emptyDetail" alignment="CENTER" spacing="10.0" styleClass="detail-empty">
+                                                                    <children>
+                                                                        <Label text="Детали заказа" styleClass="empty-index" />
+                                                                        <Label text="Выберите заказ" styleClass="empty-title" />
+                                                                        <Label maxWidth="210.0" text="Здесь появятся данные клиента, услуги и доступные действия" textAlignment="CENTER" wrapText="true" styleClass="empty-copy" />
+                                                                    </children>
+                                                                </VBox>
+
+                                                                <VBox fx:id="orderDetail" spacing="17.0" styleClass="detail-panel" visible="false" managed="false">
+                                                                    <children>
+                                                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                                            <children>
+                                                                                <Label fx:id="detailNumber" text="Заказ № 0" styleClass="detail-title" />
+                                                                                <Region HBox.hgrow="ALWAYS" />
+                                                                                <Label fx:id="detailStatus" text="Новый" styleClass="status-badge" />
+                                                                            </children>
+                                                                        </HBox>
+                                                                        <Separator />
+                                                                        <VBox spacing="5.0">
+                                                                            <children>
+                                                                                <Label text="Клиент" styleClass="detail-label" />
+                                                                                <Label fx:id="detailClient" text="" wrapText="true" styleClass="detail-value" />
+                                                                                <Label fx:id="detailPhone" text="" styleClass="detail-link" />
+                                                                                <Label fx:id="detailEmail" text="" styleClass="detail-link" />
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox spacing="5.0">
+                                                                            <children>
+                                                                                <Label text="Состав заказа" styleClass="detail-label" />
+                                                                                <Label fx:id="detailServices" text="" wrapText="true" styleClass="detail-value" />
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox spacing="5.0">
+                                                                            <children>
+                                                                                <Label text="Дата создания" styleClass="detail-label" />
+                                                                                <Label fx:id="detailDate" text="" styleClass="detail-value" />
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <Region VBox.vgrow="ALWAYS" />
+                                                                        <HBox alignment="BASELINE_LEFT" spacing="16.0">
+                                                                            <children>
+                                                                                <Label text="Итого" styleClass="detail-label" />
+                                                                                <Region HBox.hgrow="ALWAYS" />
+                                                                                <Label fx:id="detailTotal" text="0 ₽" styleClass="detail-total" />
+                                                                            </children>
+                                                                        </HBox>
+                                                                        <Button fx:id="editButton" maxWidth="1.7976931348623157E308" onAction="#editSelectedOrder" text="Редактировать заказ" styleClass="button-secondary" />
+                                                                        <Button fx:id="advanceStatusButton" maxWidth="1.7976931348623157E308" onAction="#advanceStatus" text="Принять в работу" styleClass="button-primary" />
+                                                                        <Button fx:id="deleteButton" maxWidth="1.7976931348623157E308" onAction="#deleteOrder" text="Удалить заказ" styleClass="button-danger-quiet" />
+                                                                    </children>
+                                                                </VBox>
+                                                            </children>
+                                                        </StackPane>
+                                                    </items>
+                                                </SplitPane>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+
+                                <VBox fx:id="clientsRoot" spacing="20.0" styleClass="content-root" visible="false" managed="false">
+                                    <padding><Insets bottom="24.0" left="28.0" right="28.0" top="26.0" /></padding>
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="page-header">
+                                            <children>
+                                                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                                    <children><Label text="Клиенты" styleClass="page-title" /><Label text="Контактные данные и история обращений" styleClass="page-subtitle" /></children>
+                                                </VBox>
+                                                <Button fx:id="clientEditButton" onAction="#editSelectedClient" text="Редактировать" styleClass="button-secondary" />
+                                                <Button fx:id="clientCreateButton" onAction="#openNewClient" text="Добавить клиента" styleClass="button-primary" />
+                                            </children>
+                                        </HBox>
+                                        <VBox spacing="0.0" styleClass="workspace directory-workspace" VBox.vgrow="ALWAYS">
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="toolbar">
+                                                    <children>
+                                                        <TextField fx:id="clientSearchField" promptText="Имя, телефон или email" styleClass="search-field" HBox.hgrow="ALWAYS" />
+                                                        <Button onAction="#clearClientSearch" text="Сбросить" styleClass="button-quiet" />
+                                                        <Button onAction="#refreshOrders" text="Обновить" styleClass="button-quiet" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="table-heading">
+                                                    <children><Label text="Все клиенты" styleClass="section-title" /><Region HBox.hgrow="ALWAYS" /><Label fx:id="clientCountLabel" text="Показано: 0" styleClass="result-count" /></children>
+                                                </HBox>
+                                                <TableView fx:id="clientsTable" fixedCellSize="58.0" VBox.vgrow="ALWAYS">
+                                                    <placeholder>
+                                                        <VBox alignment="CENTER" spacing="8.0" styleClass="empty-table">
+                                                            <children><Label text="Клиентов пока нет" styleClass="empty-title" /><Label text="Добавьте клиента, чтобы создать для него заказ." styleClass="empty-copy" /></children>
+                                                        </VBox>
+                                                    </placeholder>
+                                                    <columns>
+                                                        <TableColumn fx:id="clientNameColumn" minWidth="220.0" prefWidth="300.0" text="ФИО" />
+                                                        <TableColumn fx:id="clientPhoneColumn" minWidth="150.0" prefWidth="180.0" text="Телефон" />
+                                                        <TableColumn fx:id="clientEmailColumn" minWidth="220.0" prefWidth="280.0" text="Email" />
+                                                        <TableColumn fx:id="clientOrdersColumn" minWidth="110.0" prefWidth="140.0" text="Заказов" />
+                                                    </columns>
+                                                </TableView>
+                                                <HBox alignment="CENTER_RIGHT" spacing="10.0" styleClass="table-actions">
+                                                    <children><Button fx:id="clientDeleteButton" onAction="#deleteSelectedClient" text="Удалить клиента" styleClass="button-danger-quiet" /></children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+
+                                <VBox fx:id="servicesRoot" spacing="20.0" styleClass="content-root" visible="false" managed="false">
+                                    <padding><Insets bottom="24.0" left="28.0" right="28.0" top="26.0" /></padding>
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="page-header">
+                                            <children>
+                                                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                                    <children><Label text="Услуги" styleClass="page-title" /><Label text="Каталог услуг и актуальные цены" styleClass="page-subtitle" /></children>
+                                                </VBox>
+                                                <Button fx:id="serviceEditButton" onAction="#editSelectedService" text="Редактировать" styleClass="button-secondary" />
+                                                <Button fx:id="serviceCreateButton" onAction="#openNewService" text="Добавить услугу" styleClass="button-primary" />
+                                            </children>
+                                        </HBox>
+                                        <VBox spacing="0.0" styleClass="workspace directory-workspace" VBox.vgrow="ALWAYS">
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="toolbar">
+                                                    <children>
+                                                        <TextField fx:id="serviceSearchField" promptText="Название услуги" styleClass="search-field" HBox.hgrow="ALWAYS" />
+                                                        <Button onAction="#clearServiceSearch" text="Сбросить" styleClass="button-quiet" />
+                                                        <Button onAction="#refreshOrders" text="Обновить" styleClass="button-quiet" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="table-heading">
+                                                    <children><Label text="Каталог услуг" styleClass="section-title" /><Region HBox.hgrow="ALWAYS" /><Label fx:id="serviceCountLabel" text="Показано: 0" styleClass="result-count" /></children>
+                                                </HBox>
+                                                <TableView fx:id="servicesTable" fixedCellSize="58.0" VBox.vgrow="ALWAYS">
+                                                    <placeholder>
+                                                        <VBox alignment="CENTER" spacing="8.0" styleClass="empty-table">
+                                                            <children><Label text="Услуг пока нет" styleClass="empty-title" /><Label text="Добавьте первую услугу в каталог." styleClass="empty-copy" /></children>
+                                                        </VBox>
+                                                    </placeholder>
+                                                    <columns>
+                                                        <TableColumn fx:id="serviceNameColumn" minWidth="320.0" prefWidth="520.0" text="Название" />
+                                                        <TableColumn fx:id="servicePriceColumn" minWidth="160.0" prefWidth="220.0" text="Цена" />
+                                                        <TableColumn fx:id="serviceUsageColumn" minWidth="160.0" prefWidth="220.0" text="В заказах" />
+                                                    </columns>
+                                                </TableView>
+                                                <HBox alignment="CENTER_RIGHT" spacing="10.0" styleClass="table-actions">
+                                                    <children><Button fx:id="serviceDeleteButton" onAction="#deleteSelectedService" text="Удалить услугу" styleClass="button-danger-quiet" /></children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+
+                                <VBox fx:id="statisticsRoot" spacing="20.0" styleClass="content-root" visible="false" managed="false">
+                                    <padding><Insets bottom="24.0" left="28.0" right="28.0" top="26.0" /></padding>
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="page-header">
+                                            <children>
+                                                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label text="Аналитика заказов" styleClass="page-title" />
+                                                        <Label text="Статусы, суммы и общие показатели заказов" styleClass="page-subtitle" />
+                                                    </children>
+                                                </VBox>
+                                                <Button fx:id="statsRefreshButton" onAction="#refreshOrders" text="Обновить данные" styleClass="button-secondary" />
+                                                <Button onAction="#showOrdersPage" text="Вернуться к заказам" styleClass="button-primary" />
+                                            </children>
+                                        </HBox>
+
+                                        <VBox spacing="16.0" styleClass="period-panel">
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                                    <children>
+                                                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                                            <children>
+                                                                <Label text="Статистика за период" styleClass="section-title" />
+                                                                <Label fx:id="statsPeriodCaption" text="Выберите даты" styleClass="empty-copy" />
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </HBox>
+
+                                                <HBox alignment="BOTTOM_LEFT" spacing="12.0" styleClass="period-controls">
+                                                    <children>
+                                                        <VBox spacing="6.0">
+                                                            <children>
+                                                                <Label text="Дата начала" styleClass="period-field-label" />
+                                                                <DatePicker fx:id="statsFromDate" prefWidth="190.0" promptText="дд.мм.гггг" />
+                                                            </children>
+                                                        </VBox>
+                                                        <VBox spacing="6.0">
+                                                            <children>
+                                                                <Label text="Дата окончания" styleClass="period-field-label" />
+                                                                <DatePicker fx:id="statsToDate" prefWidth="190.0" promptText="дд.мм.гггг" />
+                                                            </children>
+                                                        </VBox>
+                                                        <Button fx:id="statsApplyPeriodButton" onAction="#applyPeriodStatistics" text="Показать статистику" styleClass="button-primary" />
+                                                    </children>
+                                                </HBox>
+
+                                                <Label fx:id="statsPeriodError" text="Проверьте выбранный период" wrapText="true" visible="false" managed="false" styleClass="form-error" />
+
+                                                <GridPane hgap="0.0" styleClass="period-metrics">
+                                                    <columnConstraints>
+                                                        <ColumnConstraints percentWidth="25.0" />
+                                                        <ColumnConstraints percentWidth="25.0" />
+                                                        <ColumnConstraints percentWidth="25.0" />
+                                                        <ColumnConstraints percentWidth="25.0" />
+                                                    </columnConstraints>
+                                                    <children>
+                                                        <VBox spacing="6.0" styleClass="period-metric" GridPane.columnIndex="0">
+                                                            <children><Label text="Количество заказов" styleClass="metric-label" /><Label fx:id="statsPeriodOrderCountLabel" text="0 заказов" styleClass="period-metric-value" /></children>
+                                                        </VBox>
+                                                        <VBox spacing="6.0" styleClass="period-metric" GridPane.columnIndex="1">
+                                                            <children><Label text="Минимальная сумма" styleClass="metric-label" /><Label fx:id="statsPeriodMinLabel" text="0 ₽" styleClass="period-metric-value" /></children>
+                                                        </VBox>
+                                                        <VBox spacing="6.0" styleClass="period-metric" GridPane.columnIndex="2">
+                                                            <children><Label text="Максимальная сумма" styleClass="metric-label" /><Label fx:id="statsPeriodMaxLabel" text="0 ₽" styleClass="period-metric-value" /></children>
+                                                        </VBox>
+                                                        <VBox spacing="6.0" styleClass="period-metric-last" GridPane.columnIndex="3">
+                                                            <children><Label text="Выручка завершённых" styleClass="metric-label" /><Label fx:id="statsPeriodRevenueLabel" text="0 ₽" styleClass="period-metric-value-accent" /></children>
+                                                        </VBox>
+                                                    </children>
+                                                </GridPane>
+                                            </children>
+                                        </VBox>
+
+                                        <GridPane hgap="16.0" vgap="16.0" VBox.vgrow="ALWAYS">
+                                            <columnConstraints>
+                                                <ColumnConstraints percentWidth="56.0" />
+                                                <ColumnConstraints percentWidth="44.0" />
+                                            </columnConstraints>
+                                            <children>
+                                                <VBox spacing="18.0" styleClass="statistics-panel" GridPane.columnIndex="0">
+                                                    <children>
+                                                        <HBox alignment="TOP_LEFT" spacing="12.0">
+                                                            <children>
+                                                                <VBox spacing="4.0">
+                                                                    <children>
+                                                                        <Label text="Распределение по статусам" styleClass="section-title" />
+                                                                        <Label text="Доля каждого статуса в общем количестве заказов" styleClass="empty-copy" />
+                                                                    </children>
+                                                                </VBox>
+                                                                <Region HBox.hgrow="ALWAYS" />
+                                                                <Label fx:id="statsTotalOrdersLabel" text="0 заказов" styleClass="stat-value" />
+                                                            </children>
+                                                        </HBox>
+                                                        <VBox spacing="7.0">
+                                                            <children>
+                                                                <HBox spacing="12.0"><Label text="Новые" styleClass="stat-label" /><Region HBox.hgrow="ALWAYS" /><Label fx:id="statsNewCountLabel" text="0" styleClass="stat-value" /></HBox>
+                                                                <ProgressBar fx:id="statsNewProgress" maxWidth="1.7976931348623157E308" progress="0" styleClass="stat-progress, progress-new" />
+                                                            </children>
+                                                        </VBox>
+                                                        <VBox spacing="7.0">
+                                                            <children>
+                                                                <HBox spacing="12.0"><Label text="В обработке" styleClass="stat-label" /><Region HBox.hgrow="ALWAYS" /><Label fx:id="statsProgressCountLabel" text="0" styleClass="stat-value" /></HBox>
+                                                                <ProgressBar fx:id="statsProgressProgress" maxWidth="1.7976931348623157E308" progress="0" styleClass="stat-progress, progress-active" />
+                                                            </children>
+                                                        </VBox>
+                                                        <VBox spacing="7.0">
+                                                            <children>
+                                                                <HBox spacing="12.0"><Label text="Выполненные" styleClass="stat-label" /><Region HBox.hgrow="ALWAYS" /><Label fx:id="statsCompletedCountLabel" text="0" styleClass="stat-value" /></HBox>
+                                                                <ProgressBar fx:id="statsCompletedProgress" maxWidth="1.7976931348623157E308" progress="0" styleClass="stat-progress, progress-completed" />
+                                                            </children>
+                                                        </VBox>
+                                                        <VBox spacing="7.0">
+                                                            <children>
+                                                                <HBox spacing="12.0"><Label text="Отменённые" styleClass="stat-label" /><Region HBox.hgrow="ALWAYS" /><Label fx:id="statsCancelledCountLabel" text="0" styleClass="stat-value" /></HBox>
+                                                                <ProgressBar fx:id="statsCancelledProgress" maxWidth="1.7976931348623157E308" progress="0" styleClass="stat-progress, progress-cancelled" />
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </VBox>
+
+                                                <VBox spacing="20.0" styleClass="statistics-panel" GridPane.columnIndex="1">
+                                                    <children>
+                                                        <VBox spacing="4.0">
+                                                            <children>
+                                                                <Label text="Финансовая сводка" styleClass="section-title" />
+                                                                <Label text="Суммы рассчитаны по загруженным заказам" styleClass="empty-copy" />
+                                                            </children>
+                                                        </VBox>
+                                                        <VBox spacing="6.0" styleClass="stat-finance-row">
+                                                            <children>
+                                                                <Label text="Общая стоимость" styleClass="metric-label" />
+                                                                <Label fx:id="statsPortfolioSumLabel" text="0 ₽" styleClass="stat-finance-value" />
+                                                            </children>
+                                                        </VBox>
+                                                        <Separator />
+                                                        <VBox spacing="6.0" styleClass="stat-finance-row">
+                                                            <children>
+                                                                <Label text="Средний заказ" styleClass="metric-label" />
+                                                                <Label fx:id="statsAverageOrderLabel" text="0 ₽" styleClass="stat-finance-value" />
+                                                            </children>
+                                                        </VBox>
+                                                        <Separator />
+                                                        <VBox spacing="6.0" styleClass="stat-finance-row">
+                                                            <children>
+                                                                <Label text="Сумма активных заказов" styleClass="metric-label" />
+                                                                <Label fx:id="statsActiveSumLabel" text="0 ₽" styleClass="stat-finance-value" />
+                                                            </children>
+                                                        </VBox>
+                                                        <Region VBox.vgrow="ALWAYS" />
+                                                        <Label text="Сводка обновляется после создания, редактирования, удаления или ручного обновления данных." wrapText="true" styleClass="empty-copy" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </GridPane>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </StackPane>
+                    </content>
+                </ScrollPane>
+            </center>
+        </BorderPane>
+
+        <StackPane alignment="BOTTOM_CENTER" mouseTransparent="true">
+            <padding><Insets bottom="24.0" /></padding>
+            <children><Label fx:id="toastLabel" text="Данные обновлены" visible="false" managed="false" styleClass="toast" /></children>
+        </StackPane>
+    </children>
+</StackPane>
