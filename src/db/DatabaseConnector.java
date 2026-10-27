@@ -5,16 +5,17 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnector {
-
-    private static final String URL =
-            "jdbc:postgresql://localhost:5432/funeral_services";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "admin";
+    private static final DatabaseConfig CONFIG = DatabaseConfig.load();
 
     private DatabaseConnector() {
     }
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+        if (!CONFIG.isConfigured()) {
+            throw new SQLException(
+                    "Настройки базы данных не найдены. Создайте database.properties или задайте MEMORY_DB_URL, MEMORY_DB_USER и MEMORY_DB_PASSWORD.",
+                    "08001");
+        }
+        return DriverManager.getConnection(CONFIG.url(), CONFIG.user(), CONFIG.password());
     }
 }

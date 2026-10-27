@@ -1,0 +1,5 @@
+# Скопируйте этот файл в database.properties и укажите локальные реквизиты PostgreSQL.
+# database.properties исключён из Git и не должен попадать в репозиторий.
+db.url=jdbc:postgresql://localhost:5432/funeral_services
+db.user=postgres
+db.password=replace-with-local-password

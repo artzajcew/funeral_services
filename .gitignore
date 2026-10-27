@@ -1,0 +1,12 @@
+database.properties
+.env
+*.class
+target/
+out/
+.idea/
+.vscode/
+.DS_Store
+javafx-client/database.properties
+javafx-client/.env
+javafx-client/target/
+javafx-client/out/
