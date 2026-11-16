@@ -1,0 +1,9 @@
+# Скопируйте этот файл в database.properties и укажите локальные реквизиты PostgreSQL.
+# database.properties исключён из Git и не должен попадать в репозиторий.
+db.url=jdbc:postgresql://localhost:5432/funeral_services
+db.user=postgres
+db.password=replace-with-local-password
+
+# Секрет для подписи JWT (HS256). Минимум 32 случайных символа.
+# Можно не указывать — тогда секрет будет сгенерирован и сохранён в .jwt-secret.
+# jwt.secret=change-me-to-a-long-random-string

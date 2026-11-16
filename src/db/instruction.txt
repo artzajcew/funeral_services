@@ -1,0 +1,32 @@
+как запустить бд на вашем компе:
+
+1) откройте pgadmin4
+2) создайте бд c именем funeral_services
+3) откройте query tool
+4) скопируйте текст файла schema.sql и вставьте в query tool, нажмите выполнить
+5) проверьте что появилось 12 таблиц (включая order_comments и audit_log)
+6) повторите с файлом data.sql — он заполнит бд тестовыми данными
+
+Если база была создана СТАРОЙ версией проекта (10 таблиц, без ролей):
+выполните migration_v2.sql в query tool — добавятся роли, архив,
+комментарии и журнал аудита без потери данных. Скрипт можно запускать
+повторно.
+
+Тестовые учётные записи:
+  admin / admin123    (ADMIN — администратор)
+  manager / manager123 (MANAGER — сотрудник бюро)
+  petrov / 123456     (CLIENT — клиент)
+
+Запуск REST-сервера (основной вариант, из папки проекта):
+  javac -cp lib/postgresql-42.7.12.jar -encoding UTF-8 -d out src/Main.java src/ui/*.java src/dao/*.java src/models/*.java src/utils/*.java src/db/*.java src/api/*.java
+  java -cp "out;lib/postgresql-42.7.12.jar" api.ApiServer
+
+Сервер откроет порт 8080, проверка: http://localhost:8080/api/health
+Справочник эндпоинтов: docs/API.md
+
+Запуск консольного приложения (как раньше):
+  java -cp "out;lib/postgresql-42.7.12.jar" Main
+
+Кириллица в консоли: запускайте из cmd/PowerShell без chcp 65001 (стандартная
+кодировка Windows). Не смешивайте chcp 65001 с обычным запуском — будет
+«кракозябры». Поиск услуг (п. 4) работает при вводе на русском в той же консоли.
