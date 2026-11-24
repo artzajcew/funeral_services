@@ -1,0 +1,9 @@
+out/
+target/
+*.class
+.idea/
+.vscode/
+.DS_Store
+database.properties
+backend/database.properties
+.env

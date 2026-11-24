@@ -2,6 +2,7 @@
 -- schema.sql
 -- Система автоматизации бюро ритуальных услуг
 -- PostgreSQL
+<<<<<<< HEAD
 --
 -- Версия 2 (согласно ТЗ):
 --   * пользователи: роли (ADMIN/MANAGER/CLIENT) и блокировка;
@@ -13,6 +14,11 @@
 -- Удаление таблиц при повторном запуске schema.sql
 DROP TABLE IF EXISTS audit_log CASCADE;
 DROP TABLE IF EXISTS order_comments CASCADE;
+=======
+-- ============================================================
+
+-- Удаление таблиц при повторном запуске schema.sql
+>>>>>>> d36279e7400e63d0f6a8d6fc745cd78bb36ce62b
 DROP TABLE IF EXISTS order_items CASCADE;
 DROP TABLE IF EXISTS orders CASCADE;
 DROP TABLE IF EXISTS delivery CASCADE;
@@ -28,11 +34,14 @@ DROP TABLE IF EXISTS users CASCADE;
 -- ============================================================
 -- 1. USERS
 -- Пользователи системы
+<<<<<<< HEAD
 --   role: ADMIN   — администратор (все функции, включая
 --                   архив, массовые операции, CSV, аналитику,
 --                   управление пользователями и аудит);
 --         MANAGER — сотрудник бюро (работа со всеми заказами);
 --         CLIENT  — клиент (только свои заказы).
+=======
+>>>>>>> d36279e7400e63d0f6a8d6fc745cd78bb36ce62b
 -- ============================================================
 
 CREATE TABLE users (
@@ -44,18 +53,29 @@ CREATE TABLE users (
 
     full_name VARCHAR(150) NOT NULL,
 
+<<<<<<< HEAD
     role VARCHAR(20) NOT NULL DEFAULT 'CLIENT',
 
     is_blocked BOOLEAN NOT NULL DEFAULT FALSE,
 
     CONSTRAINT chk_users_role
         CHECK (role IN ('ADMIN', 'MANAGER', 'CLIENT'))
+=======
+    role VARCHAR(20) NOT NULL,
+
+    CONSTRAINT chk_users_role
+        CHECK (role IN ('CLIENT', 'ADMIN'))
+>>>>>>> d36279e7400e63d0f6a8d6fc745cd78bb36ce62b
 );
 
 
 -- ============================================================
 -- 2. CLIENTS
+<<<<<<< HEAD
 -- Клиенты бюро (профиль привязан к учётной записи)
+=======
+-- Клиенты бюро
+>>>>>>> d36279e7400e63d0f6a8d6fc745cd78bb36ce62b
 -- ============================================================
 
 CREATE TABLE clients (
@@ -185,8 +205,11 @@ CREATE TABLE delivery (
 -- ============================================================
 -- 9. ORDERS
 -- Заказы клиентов
+<<<<<<< HEAD
 --   is_archived — запись перенесена в архив (только админ);
 --                 такие записи скрываются из обычных списков.
+=======
+>>>>>>> d36279e7400e63d0f6a8d6fc745cd78bb36ce62b
 -- ============================================================
 
 CREATE TABLE orders (
@@ -200,10 +223,13 @@ CREATE TABLE orders (
 
     total_cost NUMERIC(12, 2) NOT NULL DEFAULT 0,
 
+<<<<<<< HEAD
     is_archived BOOLEAN NOT NULL DEFAULT FALSE,
 
     archived_at TIMESTAMP,
 
+=======
+>>>>>>> d36279e7400e63d0f6a8d6fc745cd78bb36ce62b
     CONSTRAINT fk_orders_client
         FOREIGN KEY (client_id)
         REFERENCES clients(id)
@@ -241,11 +267,23 @@ CREATE TABLE order_items (
     price NUMERIC(10, 2) NOT NULL,
 
     -- Дополнительные данные конкретной услуги
+<<<<<<< HEAD
     coffin_id INTEGER,
     decor_id INTEGER,
     digging_id INTEGER,
     delivery_id INTEGER,
     deceased_id INTEGER,
+=======
+    coffin_id INTEGER UNIQUE,
+
+    decor_id INTEGER UNIQUE,
+
+    digging_id INTEGER UNIQUE,
+
+    delivery_id INTEGER UNIQUE,
+
+    deceased_id INTEGER UNIQUE,
+>>>>>>> d36279e7400e63d0f6a8d6fc745cd78bb36ce62b
 
     CONSTRAINT fk_order_items_order
         FOREIGN KEY (order_id)
@@ -291,6 +329,7 @@ CREATE TABLE order_items (
 
 
 -- ============================================================
+<<<<<<< HEAD
 -- 11. ORDER_COMMENTS
 -- Комментарии к заказам.
 -- Клиент пишет к своим заказам, менеджер и администратор —
@@ -353,6 +392,8 @@ CREATE TABLE audit_log (
 
 
 -- ============================================================
+=======
+>>>>>>> d36279e7400e63d0f6a8d6fc745cd78bb36ce62b
 -- Индексы
 -- ============================================================
 
@@ -368,15 +409,19 @@ CREATE INDEX idx_orders_status
 CREATE INDEX idx_orders_created_at
     ON orders(created_at);
 
+<<<<<<< HEAD
 CREATE INDEX idx_orders_is_archived
     ON orders(is_archived);
 
+=======
+>>>>>>> d36279e7400e63d0f6a8d6fc745cd78bb36ce62b
 CREATE INDEX idx_order_items_order_id
     ON order_items(order_id);
 
 CREATE INDEX idx_order_items_service_id
     ON order_items(service_id);
 
+<<<<<<< HEAD
 CREATE INDEX idx_order_comments_order_id
     ON order_comments(order_id);
 
@@ -393,3 +438,9 @@ CREATE INDEX idx_audit_log_action
 -- ============================================================
 -- Конец schema.sql
 -- ============================================================
+=======
+
+-- ============================================================
+-- Конец schema.sql
+-- ============================================================
+>>>>>>> d36279e7400e63d0f6a8d6fc745cd78bb36ce62b
