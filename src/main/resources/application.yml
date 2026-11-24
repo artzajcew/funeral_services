@@ -1,0 +1,77 @@
+# ============================================================
+# «Память»: REST-бэкенд на Spring Boot
+# Архитектура: Web-интерфейс (React) → HTTP/REST/JSON →
+#               Spring Boot Backend → JPA/SQL → PostgreSQL
+# ============================================================
+
+spring:
+  application:
+    name: memory-backend
+
+  # Основной профиль: PostgreSQL (схема создаётся скриптами db/).
+  datasource:
+    url: ${MEMORY_DB_URL:jdbc:postgresql://localhost:5432/funeral_services}
+    username: ${MEMORY_DB_USER:postgres}
+    password: ${MEMORY_DB_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      # Схема управляется SQL-скриптами db/schema.sql + db/data.sql,
+      # Hibernate только маппит готовые таблицы.
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  # Прокидываем PORT/HTTP_PORT (как у прежнего сервера на JDK HttpServer).
+  # server.port читается ниже; здесь — маппинг для совместимости.
+  main:
+    banner-mode: console
+
+server:
+  port: ${HTTP_PORT:8080}
+  error:
+    include-message: always
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: WARN
+
+# Настройки приложения
+app:
+  jwt:
+    # Секрет подписи JWT (HS256). Задаётся через переменную окружения
+    # MEMORY_JWT_SECRET или системное свойство memory.jwt.secret.
+    # Если не задан — генерируется временный (токены живут до перезапуска).
+    secret: ${MEMORY_JWT_SECRET:}
+
+---
+# ============================================================
+# Профиль demo: встроенная база H2 (in-memory) для быстрого
+# локального запуска без PostgreSQL. Схема и данные — те же.
+#   java -jar backend.jar --spring.profiles.active=demo
+# ============================================================
+spring:
+  config:
+    activate:
+      on-profile: demo
+
+  datasource:
+    url: jdbc:h2:mem:funeral_services;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/schema-h2.sql
+      data-locations: classpath:db/data-h2.sql
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
